@@ -1,0 +1,11 @@
+# extracted 3ds Max source archive (750+ MB, not loadable by the app)
+scenes/office-setup/
+
+# regenerable artifacts
+exports/
+walkthrough.mp4
+shot.png
+
+# user-uploaded fabric textures (runtime data, managed via the Admin panel)
+textures/manifest.json
+textures/tex-*

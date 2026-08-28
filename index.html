@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AcoustiConfig — Ceiling Acoustics Configurator</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='4' y='6' width='24' height='4' rx='1' fill='%2324d0a8'/%3E%3Crect x='4' y='14' width='24' height='4' rx='1' fill='%235b6770'/%3E%3Crect x='4' y='22' width='24' height='4' rx='1' fill='%23c65a33'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <header id="toolbar">
+    <div id="brand">
+      <span class="brand-mark"></span>
+      <span class="brand-name">AcoustiConfig</span>
+      <span class="brand-sub">ceiling acoustics configurator</span>
+    </div>
+    <div class="tb-group" id="tb-views"></div>
+    <div class="tb-group" id="tb-toggles"></div>
+    <div class="tb-spacer"></div>
+    <div class="tb-group" id="tb-actions"></div>
+  </header>
+
+  <div id="main">
+    <aside id="sidebar">
+      <section class="panel" id="panel-products">
+        <h2>Products</h2>
+        <div id="product-cards"></div>
+      </section>
+      <section class="panel" id="panel-presets">
+        <h2>Layout presets</h2>
+        <div id="preset-buttons"></div>
+        <p class="panel-note">Presets add to the current scene.</p>
+      </section>
+      <section class="panel" id="panel-props">
+        <h2>Selection</h2>
+        <div id="props-body"><p class="empty-note">Nothing selected. Click a product in the scene, or add one above.</p></div>
+      </section>
+      <section class="panel" id="panel-arrange">
+        <h2>Arrange as array</h2>
+        <div id="arrange-body"></div>
+      </section>
+      <section class="panel" id="panel-room">
+        <h2>Room</h2>
+        <div id="room-body"></div>
+      </section>
+    </aside>
+    <div id="viewport">
+      <div id="loading">Loading 3D engine…</div>
+    </div>
+  </div>
+
+  <div id="hint"></div>
+
+  <script type="module" src="js/app.js"></script>
+  <script>
+    setTimeout(() => {
+      const el = document.getElementById('loading');
+      if (el && !window.__appReady) el.textContent = 'Still loading… the 3D engine loads from cdn.jsdelivr.net, so an internet connection is needed on first load.';
+    }, 8000);
+  </script>
+</body>
+</html>

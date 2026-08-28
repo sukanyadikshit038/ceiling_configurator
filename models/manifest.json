@@ -1,0 +1,13 @@
+[
+  {
+    "id": "real-baffle",
+    "name": "Baffle 3D Model (uploaded)",
+    "file": "baffle-unit.fbx",
+    "scale": 0.0001,
+    "assembly": true,
+    "parts": {
+      "carrier": "Group68",
+      "rod": "Light_Hanger79"
+    }
+  }
+]
