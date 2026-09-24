@@ -1,0 +1,13 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "ceiling-configurator",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "app",
+      "port": 5190,
+      "url": "http://localhost:5190"
+    }
+  ]
+}

@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------------------------------------------------------------------------
+   THEME TOKENS
+   ---------------------------------------------------------------------------
+   Two themes over one set of names. Light is the house theme, transcribed from
+   the wall configurator's spec (univicoustic-ui-color-theme.md, itself read off
+   configurator.univicoustic.com rather than eyeballed). Dark is the ink palette
+   this app shipped with, kept while the light one is being judged.
+
+   HSL COMPONENTS, space-separated, no hsl() wrapper. That format is not a
+   style choice: it is what lets Tailwind substitute <alpha-value>, so
+   `bg-accent/15` and `text-txt/70` keep working. Wrap them in hsl() and every
+   opacity modifier in the app silently stops.
+
+   The names are by ROLE, not by shade. `surface` rather than `ink-800`, because
+   a token called ink-800 that is white in one theme is a lie in the other.
+   --------------------------------------------------------------------------- */
+
+:root {
+  /* --- surfaces ------------------------------------------------------- */
+  --bg:            0 0% 100%;          /* #FFFFFF  the window behind everything */
+  --surface:       0 0% 100%;          /* #FFFFFF  panels, cards, popovers      */
+  --surface-2:     0 0% 100%;          /* #FFFFFF  inputs — white with a border */
+
+  /* --- lines ---------------------------------------------------------- */
+  --line:          214.3 31.8% 91.4%;  /* #E2E8F0  the standard border          */
+  --line-soft:     216 15.2% 87.1%;    /* #D9DDE3  subtle dividers              */
+  --line-strong:   215.7 16.2% 55.1%;  /* #7A899F  hover / emphasis             */
+
+  /* --- fills ---------------------------------------------------------- */
+  --fill:          216 16.1% 93.9%;    /* #EDEFF2  hover backgrounds            */
+  --fill-2:        210 40% 96.1%;      /* #F1F5F9  selected / muted panel fill  */
+
+  /* --- text ----------------------------------------------------------- */
+  --txt:           215.3 24.6% 27.1%;  /* #344256  headings, primary copy       */
+  --txt-2:         214.7 15.8% 47.1%;  /* #65758B  body, secondary              */
+  --txt-3:         215.6 15.7% 60%;    /* #8996A9  captions, placeholders       */
+
+  /* --- the one saturated colour --------------------------------------- */
+  --accent:        0 60.8% 59%;        /* #D65757  actionable, or selected      */
+  --accent-hover:  0 46.9% 52%;        /* #BE4B4B                               */
+  --on-accent:     0 0% 100%;          /* #FFFFFF  text sitting on the accent   */
+
+  --danger:        0 84.2% 60.2%;      /* #EF4444                               */
+  --scrim:         215.3 24.6% 27.1%;  /* navy, only ever used at low alpha     */
+
+  --radius: 0.5rem;                    /* 8px */
+}
+
+[data-theme='dark'] {
+  /* The palette this app shipped with. Flattened where it used to be a
+     translucent white over a panel, because Tailwind's <alpha-value> needs
+     channels and cannot carry an alpha of its own — `white/10` over #171b21 is
+     #2e3237, and that is what --line is here. */
+  --bg:            217.5 22.2% 7.1%;   /* #0e1116  ink-900 */
+  --surface:       216 17.9% 11%;      /* #171b21  ink-800 */
+  --surface-2:     214.3 18.9% 14.5%;  /* #1e242c  ink-700 */
+
+  --line:          213.3 8.9% 19.8%;   /* was white/10      */
+  --line-soft:     216 11.4% 17.3%;    /* was white/[0.07]  */
+  --line-strong:   210 5.5% 28.6%;     /* was white/20      */
+
+  --fill:          216 13.5% 14.5%;    /* was white/[0.04]  */
+  --fill-2:        220 9.7% 18.2%;     /* was white/[0.08]  */
+
+  --txt:           0 0% 100%;
+  --txt-2:         214 4% 64%;         /* was white/60      */
+  --txt-3:         214 3% 52%;         /* was white/45      */
+
+  --accent:        166 70.5% 47.8%;    /* #24d0a8 */
+  --accent-hover:  166.5 70% 30%;      /* #17826a */
+  --on-accent:     217.5 22.2% 7.1%;   /* ink-900 — DARK text on teal, not white */
+
+  --danger:        8.1 68.4% 61.6%;    /* #e06c5a */
+  --scrim:         0 0% 0%;
+}
+
+html, body, #root { height: 100%; margin: 0; }
+
+body {
+  background: hsl(var(--bg));
+  color: hsl(var(--txt-2));
+  font-family: Inter, "Segoe UI", system-ui, sans-serif;
+  overscroll-behavior: none;
+}
+
+/* Manrope on headings only — the spec is explicit that the navy was chosen
+   against Manrope's geometry, and that a heavier display face makes it harsh. */
+h1, h2, h3 { font-family: Manrope, Inter, "Segoe UI", system-ui, sans-serif; }
+
+* { scrollbar-width: thin; scrollbar-color: hsl(var(--line-strong)) transparent; }
+*::-webkit-scrollbar { width: 8px; height: 8px }
+*::-webkit-scrollbar-thumb { background: hsl(var(--line-strong)); border-radius: 4px }
+canvas { display: block; outline: none }

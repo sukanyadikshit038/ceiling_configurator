@@ -1,0 +1,30 @@
+{
+  "name": "univicoustic-ceiling-configurator",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "homepage": "/ceiling",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "manifest": "node scripts/build-manifest.mjs",
+    "verify": "node scripts/verify.mjs",
+    "fix-tiles": "node scripts/fix-tile-models.mjs && node scripts/build-manifest.mjs"
+  },
+  "dependencies": {
+    "@react-three/drei": "^10.7.8",
+    "@react-three/fiber": "^9.7.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "three": "0.183.2",
+    "zustand": "^5.0.15"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "3.4.17",
+    "vite": "^6.0.7"
+  }
+}

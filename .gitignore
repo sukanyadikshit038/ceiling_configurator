@@ -1,3 +1,7 @@
+# dependencies & build output
+node_modules/
+app/dist/
+
 # extracted 3ds Max source archive (750+ MB, not loadable by the app)
 scenes/office-setup/
 
@@ -6,6 +10,46 @@ exports/
 walkthrough.mp4
 shot.png
 
-# user-uploaded fabric textures (runtime data, managed via the Admin panel)
-textures/manifest.json
-textures/tex-*
+# generated from the model folders by scripts/build-manifest.mjs — every
+# checkout regenerates it on dev start and before every build
+app/public/models/manifest.json
+app/public/models/.cache/
+
+# ---------------------------------------------------------------------------
+# SUPPLIED PRODUCT ASSETS — deliberately not in this repository.
+#
+# This repo is PUBLIC. The folders below are UniVicoustic's property, not
+# code: the product geometry, the printed Cloud Series designs, the Designer
+# Textile photography. Together they are about 1.1 GB, which git would also
+# carry forever — a 91 MB FBX cannot be taken back out of a history once it is
+# pushed.
+#
+# A fresh clone therefore will NOT run until these are copied in alongside it.
+# See the Assets section of app/README.md for the layout they go back into.
+# ---------------------------------------------------------------------------
+Cloud Series/
+app/public/models/Cloud/
+app/public/models/Fly/
+app/public/models/baffles/
+app/public/models/ceiling_tiles/
+app/public/textures/baffles/
+app/public/textures/ceiling-tiles/
+app/public/textures/clouds/
+app/public/textures/fly/
+
+# ---------------------------------------------------------------------------
+# working files that are not the project
+# ---------------------------------------------------------------------------
+brag-output/
+brag-output-*/
+scratchpad/
+
+# loose captures and marked-up references, kept locally
+Screenshot *.png
+*- Copy.png
+ceiling-grid-24mm.png
+tile-1200x600-marked.png
+
+# python bytecode
+__pycache__/
+*.pyc

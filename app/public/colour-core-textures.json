@@ -1,0 +1,1061 @@
+{
+  "$comment": "Flat Fabric / Colour Core texture map for the UniVicoustic Ceiling Configurator. Every URL in this file was HTTP-verified against CloudFront at generation time. Source of truth: frontend/src/data/skus.js in the wall configurator repo.",
+  "meta": {
+    "generatedAt": "2026-09-01T12:41:25.362158+00:00",
+    "product": "Fabrics — Colour Core",
+    "surface": "Flat",
+    "cdnBaseUrl": "https://d27tzvhakjjy0q.cloudfront.net",
+    "texturePathPattern": "/static/images/fabric/color-core/panels/{structureId}_{colorId}.jpg",
+    "thumbnailPathPattern": "/static/_thumbcache/fabric/color-core/panels/{structureId}_{colorId}.jpg",
+    "counts": {
+      "structures": 3,
+      "colors": 19,
+      "combinations": 57,
+      "verifiedTextures": 57,
+      "verifiedThumbnails": 57,
+      "failed": 0
+    },
+    "panelSizesOffered": [
+      "1200x2800",
+      "1200x2400",
+      "600x600",
+      "600x1200"
+    ],
+    "totalPayloadMB": 238.6,
+    "textureSizeMB": {
+      "min": 2.36,
+      "max": 7.54,
+      "median": 3.94
+    },
+    "warnings": [
+      "Full-resolution panel JPEGs are 3-9 MB each and are authored for a flat 2D wall preview, not for 3D. Applied directly to a model they will be heavy to download and very heavy in VRAM (a decoded 4K texture costs ~67 MB of GPU memory regardless of file size). Downsample and convert to KTX2/Basis before use in the 3D scene.",
+      "These are photographic panel captures, not tiling textures - they will show a visible seam if repeated across a surface. Verify tiling behaviour before applying to large meshes.",
+      "CC-10 exists in storage for all three structures but is deliberately absent from the product catalogue in skus.js, so it is excluded here. Do not add it without confirming it is a sellable product."
+    ]
+  },
+  "structures": [
+    {
+      "id": "FB-NE-06",
+      "name": "FB-CC-01"
+    },
+    {
+      "id": "FB-GY-28",
+      "name": "FB-CC-02"
+    },
+    {
+      "id": "FB-GY-03",
+      "name": "FB-CC-03"
+    }
+  ],
+  "colors": [
+    {
+      "id": "CC-01",
+      "name": "Oat",
+      "hex": "#ecded3"
+    },
+    {
+      "id": "CC-02",
+      "name": "Apricot",
+      "hex": "#e9ccc5"
+    },
+    {
+      "id": "CC-03",
+      "name": "Olive",
+      "hex": "#abb86b"
+    },
+    {
+      "id": "CC-04",
+      "name": "Straw",
+      "hex": "#f9d698"
+    },
+    {
+      "id": "CC-05",
+      "name": "Arabian Spice",
+      "hex": "#9e5239"
+    },
+    {
+      "id": "CC-06",
+      "name": "Coral Haze",
+      "hex": "#b87857"
+    },
+    {
+      "id": "CC-07",
+      "name": "Fog",
+      "hex": "#d3d3d3"
+    },
+    {
+      "id": "CC-08",
+      "name": "Glacier",
+      "hex": "#b6b5b8"
+    },
+    {
+      "id": "CC-09",
+      "name": "Birch",
+      "hex": "#95948d"
+    },
+    {
+      "id": "CC-11",
+      "name": "Smoke Blue",
+      "hex": "#6e7f92"
+    },
+    {
+      "id": "CC-12",
+      "name": "Shadow",
+      "hex": "#6e8890"
+    },
+    {
+      "id": "CC-13",
+      "name": "Sand",
+      "hex": "#c6ab9a"
+    },
+    {
+      "id": "CC-14",
+      "name": "Pearl",
+      "hex": "#c6b4a4"
+    },
+    {
+      "id": "CC-15",
+      "name": "Dune",
+      "hex": "#96795e"
+    },
+    {
+      "id": "CC-16",
+      "name": "Mirage",
+      "hex": "#8e9d98"
+    },
+    {
+      "id": "CC-17",
+      "name": "Taupe",
+      "hex": "#a29083"
+    },
+    {
+      "id": "CC-18",
+      "name": "Concrete Gray",
+      "hex": "#909ea8"
+    },
+    {
+      "id": "CC-19",
+      "name": "Mushroom",
+      "hex": "#aeadaf"
+    },
+    {
+      "id": "CC-20",
+      "name": "Alloy",
+      "hex": "#767a82"
+    }
+  ],
+  "textures": [
+    {
+      "key": "FB-NE-06_CC-01",
+      "structureId": "FB-NE-06",
+      "structureName": "FB-CC-01",
+      "colorId": "CC-01",
+      "colorName": "Oat",
+      "hex": "#ecded3",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-NE-06_CC-01.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-NE-06_CC-01.jpg",
+      "textureBytes": 5030137,
+      "textureMB": 4.8,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-NE-06_CC-02",
+      "structureId": "FB-NE-06",
+      "structureName": "FB-CC-01",
+      "colorId": "CC-02",
+      "colorName": "Apricot",
+      "hex": "#e9ccc5",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-NE-06_CC-02.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-NE-06_CC-02.jpg",
+      "textureBytes": 4811454,
+      "textureMB": 4.59,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-NE-06_CC-03",
+      "structureId": "FB-NE-06",
+      "structureName": "FB-CC-01",
+      "colorId": "CC-03",
+      "colorName": "Olive",
+      "hex": "#abb86b",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-NE-06_CC-03.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-NE-06_CC-03.jpg",
+      "textureBytes": 3241905,
+      "textureMB": 3.09,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-NE-06_CC-04",
+      "structureId": "FB-NE-06",
+      "structureName": "FB-CC-01",
+      "colorId": "CC-04",
+      "colorName": "Straw",
+      "hex": "#f9d698",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-NE-06_CC-04.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-NE-06_CC-04.jpg",
+      "textureBytes": 4428555,
+      "textureMB": 4.22,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-NE-06_CC-05",
+      "structureId": "FB-NE-06",
+      "structureName": "FB-CC-01",
+      "colorId": "CC-05",
+      "colorName": "Arabian Spice",
+      "hex": "#9e5239",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-NE-06_CC-05.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-NE-06_CC-05.jpg",
+      "textureBytes": 2772620,
+      "textureMB": 2.64,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-NE-06_CC-06",
+      "structureId": "FB-NE-06",
+      "structureName": "FB-CC-01",
+      "colorId": "CC-06",
+      "colorName": "Coral Haze",
+      "hex": "#b87857",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-NE-06_CC-06.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-NE-06_CC-06.jpg",
+      "textureBytes": 2792637,
+      "textureMB": 2.66,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-NE-06_CC-07",
+      "structureId": "FB-NE-06",
+      "structureName": "FB-CC-01",
+      "colorId": "CC-07",
+      "colorName": "Fog",
+      "hex": "#d3d3d3",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-NE-06_CC-07.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-NE-06_CC-07.jpg",
+      "textureBytes": 6324019,
+      "textureMB": 6.03,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-NE-06_CC-08",
+      "structureId": "FB-NE-06",
+      "structureName": "FB-CC-01",
+      "colorId": "CC-08",
+      "colorName": "Glacier",
+      "hex": "#b6b5b8",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-NE-06_CC-08.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-NE-06_CC-08.jpg",
+      "textureBytes": 4861388,
+      "textureMB": 4.64,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-NE-06_CC-09",
+      "structureId": "FB-NE-06",
+      "structureName": "FB-CC-01",
+      "colorId": "CC-09",
+      "colorName": "Birch",
+      "hex": "#95948d",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-NE-06_CC-09.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-NE-06_CC-09.jpg",
+      "textureBytes": 3916891,
+      "textureMB": 3.74,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-NE-06_CC-11",
+      "structureId": "FB-NE-06",
+      "structureName": "FB-CC-01",
+      "colorId": "CC-11",
+      "colorName": "Smoke Blue",
+      "hex": "#6e7f92",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-NE-06_CC-11.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-NE-06_CC-11.jpg",
+      "textureBytes": 2691978,
+      "textureMB": 2.57,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-NE-06_CC-12",
+      "structureId": "FB-NE-06",
+      "structureName": "FB-CC-01",
+      "colorId": "CC-12",
+      "colorName": "Shadow",
+      "hex": "#6e8890",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-NE-06_CC-12.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-NE-06_CC-12.jpg",
+      "textureBytes": 3044024,
+      "textureMB": 2.9,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-NE-06_CC-13",
+      "structureId": "FB-NE-06",
+      "structureName": "FB-CC-01",
+      "colorId": "CC-13",
+      "colorName": "Sand",
+      "hex": "#c6ab9a",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-NE-06_CC-13.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-NE-06_CC-13.jpg",
+      "textureBytes": 4501089,
+      "textureMB": 4.29,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-NE-06_CC-14",
+      "structureId": "FB-NE-06",
+      "structureName": "FB-CC-01",
+      "colorId": "CC-14",
+      "colorName": "Pearl",
+      "hex": "#c6b4a4",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-NE-06_CC-14.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-NE-06_CC-14.jpg",
+      "textureBytes": 4019016,
+      "textureMB": 3.83,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-NE-06_CC-15",
+      "structureId": "FB-NE-06",
+      "structureName": "FB-CC-01",
+      "colorId": "CC-15",
+      "colorName": "Dune",
+      "hex": "#96795e",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-NE-06_CC-15.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-NE-06_CC-15.jpg",
+      "textureBytes": 2907885,
+      "textureMB": 2.77,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-NE-06_CC-16",
+      "structureId": "FB-NE-06",
+      "structureName": "FB-CC-01",
+      "colorId": "CC-16",
+      "colorName": "Mirage",
+      "hex": "#8e9d98",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-NE-06_CC-16.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-NE-06_CC-16.jpg",
+      "textureBytes": 3453175,
+      "textureMB": 3.29,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-NE-06_CC-17",
+      "structureId": "FB-NE-06",
+      "structureName": "FB-CC-01",
+      "colorId": "CC-17",
+      "colorName": "Taupe",
+      "hex": "#a29083",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-NE-06_CC-17.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-NE-06_CC-17.jpg",
+      "textureBytes": 3622014,
+      "textureMB": 3.45,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-NE-06_CC-18",
+      "structureId": "FB-NE-06",
+      "structureName": "FB-CC-01",
+      "colorId": "CC-18",
+      "colorName": "Concrete Gray",
+      "hex": "#909ea8",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-NE-06_CC-18.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-NE-06_CC-18.jpg",
+      "textureBytes": 5109271,
+      "textureMB": 4.87,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-NE-06_CC-19",
+      "structureId": "FB-NE-06",
+      "structureName": "FB-CC-01",
+      "colorId": "CC-19",
+      "colorName": "Mushroom",
+      "hex": "#aeadaf",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-NE-06_CC-19.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-NE-06_CC-19.jpg",
+      "textureBytes": 3412934,
+      "textureMB": 3.25,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-NE-06_CC-20",
+      "structureId": "FB-NE-06",
+      "structureName": "FB-CC-01",
+      "colorId": "CC-20",
+      "colorName": "Alloy",
+      "hex": "#767a82",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-NE-06_CC-20.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-NE-06_CC-20.jpg",
+      "textureBytes": 3332945,
+      "textureMB": 3.18,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-28_CC-01",
+      "structureId": "FB-GY-28",
+      "structureName": "FB-CC-02",
+      "colorId": "CC-01",
+      "colorName": "Oat",
+      "hex": "#ecded3",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-28_CC-01.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-28_CC-01.jpg",
+      "textureBytes": 5178500,
+      "textureMB": 4.94,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-28_CC-02",
+      "structureId": "FB-GY-28",
+      "structureName": "FB-CC-02",
+      "colorId": "CC-02",
+      "colorName": "Apricot",
+      "hex": "#e9ccc5",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-28_CC-02.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-28_CC-02.jpg",
+      "textureBytes": 5985348,
+      "textureMB": 5.71,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-28_CC-03",
+      "structureId": "FB-GY-28",
+      "structureName": "FB-CC-02",
+      "colorId": "CC-03",
+      "colorName": "Olive",
+      "hex": "#abb86b",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-28_CC-03.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-28_CC-03.jpg",
+      "textureBytes": 3186219,
+      "textureMB": 3.04,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-28_CC-04",
+      "structureId": "FB-GY-28",
+      "structureName": "FB-CC-02",
+      "colorId": "CC-04",
+      "colorName": "Straw",
+      "hex": "#f9d698",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-28_CC-04.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-28_CC-04.jpg",
+      "textureBytes": 4583276,
+      "textureMB": 4.37,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-28_CC-05",
+      "structureId": "FB-GY-28",
+      "structureName": "FB-CC-02",
+      "colorId": "CC-05",
+      "colorName": "Arabian Spice",
+      "hex": "#9e5239",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-28_CC-05.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-28_CC-05.jpg",
+      "textureBytes": 3122705,
+      "textureMB": 2.98,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-28_CC-06",
+      "structureId": "FB-GY-28",
+      "structureName": "FB-CC-02",
+      "colorId": "CC-06",
+      "colorName": "Coral Haze",
+      "hex": "#b87857",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-28_CC-06.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-28_CC-06.jpg",
+      "textureBytes": 3525328,
+      "textureMB": 3.36,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-28_CC-07",
+      "structureId": "FB-GY-28",
+      "structureName": "FB-CC-02",
+      "colorId": "CC-07",
+      "colorName": "Fog",
+      "hex": "#d3d3d3",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-28_CC-07.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-28_CC-07.jpg",
+      "textureBytes": 6114185,
+      "textureMB": 5.83,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-28_CC-08",
+      "structureId": "FB-GY-28",
+      "structureName": "FB-CC-02",
+      "colorId": "CC-08",
+      "colorName": "Glacier",
+      "hex": "#b6b5b8",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-28_CC-08.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-28_CC-08.jpg",
+      "textureBytes": 5026488,
+      "textureMB": 4.79,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-28_CC-09",
+      "structureId": "FB-GY-28",
+      "structureName": "FB-CC-02",
+      "colorId": "CC-09",
+      "colorName": "Birch",
+      "hex": "#95948d",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-28_CC-09.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-28_CC-09.jpg",
+      "textureBytes": 3589260,
+      "textureMB": 3.42,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-28_CC-11",
+      "structureId": "FB-GY-28",
+      "structureName": "FB-CC-02",
+      "colorId": "CC-11",
+      "colorName": "Smoke Blue",
+      "hex": "#6e7f92",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-28_CC-11.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-28_CC-11.jpg",
+      "textureBytes": 2476367,
+      "textureMB": 2.36,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-28_CC-12",
+      "structureId": "FB-GY-28",
+      "structureName": "FB-CC-02",
+      "colorId": "CC-12",
+      "colorName": "Shadow",
+      "hex": "#6e8890",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-28_CC-12.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-28_CC-12.jpg",
+      "textureBytes": 4013727,
+      "textureMB": 3.83,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-28_CC-13",
+      "structureId": "FB-GY-28",
+      "structureName": "FB-CC-02",
+      "colorId": "CC-13",
+      "colorName": "Sand",
+      "hex": "#c6ab9a",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-28_CC-13.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-28_CC-13.jpg",
+      "textureBytes": 3996050,
+      "textureMB": 3.81,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-28_CC-14",
+      "structureId": "FB-GY-28",
+      "structureName": "FB-CC-02",
+      "colorId": "CC-14",
+      "colorName": "Pearl",
+      "hex": "#c6b4a4",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-28_CC-14.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-28_CC-14.jpg",
+      "textureBytes": 4818132,
+      "textureMB": 4.59,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-28_CC-15",
+      "structureId": "FB-GY-28",
+      "structureName": "FB-CC-02",
+      "colorId": "CC-15",
+      "colorName": "Dune",
+      "hex": "#96795e",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-28_CC-15.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-28_CC-15.jpg",
+      "textureBytes": 4052432,
+      "textureMB": 3.86,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-28_CC-16",
+      "structureId": "FB-GY-28",
+      "structureName": "FB-CC-02",
+      "colorId": "CC-16",
+      "colorName": "Mirage",
+      "hex": "#8e9d98",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-28_CC-16.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-28_CC-16.jpg",
+      "textureBytes": 3682514,
+      "textureMB": 3.51,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-28_CC-17",
+      "structureId": "FB-GY-28",
+      "structureName": "FB-CC-02",
+      "colorId": "CC-17",
+      "colorName": "Taupe",
+      "hex": "#a29083",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-28_CC-17.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-28_CC-17.jpg",
+      "textureBytes": 4663147,
+      "textureMB": 4.45,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-28_CC-18",
+      "structureId": "FB-GY-28",
+      "structureName": "FB-CC-02",
+      "colorId": "CC-18",
+      "colorName": "Concrete Gray",
+      "hex": "#909ea8",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-28_CC-18.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-28_CC-18.jpg",
+      "textureBytes": 5687624,
+      "textureMB": 5.42,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-28_CC-19",
+      "structureId": "FB-GY-28",
+      "structureName": "FB-CC-02",
+      "colorId": "CC-19",
+      "colorName": "Mushroom",
+      "hex": "#aeadaf",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-28_CC-19.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-28_CC-19.jpg",
+      "textureBytes": 3783519,
+      "textureMB": 3.61,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-28_CC-20",
+      "structureId": "FB-GY-28",
+      "structureName": "FB-CC-02",
+      "colorId": "CC-20",
+      "colorName": "Alloy",
+      "hex": "#767a82",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-28_CC-20.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-28_CC-20.jpg",
+      "textureBytes": 3787225,
+      "textureMB": 3.61,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-03_CC-01",
+      "structureId": "FB-GY-03",
+      "structureName": "FB-CC-03",
+      "colorId": "CC-01",
+      "colorName": "Oat",
+      "hex": "#ecded3",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-03_CC-01.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-03_CC-01.jpg",
+      "textureBytes": 5287982,
+      "textureMB": 5.04,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-03_CC-02",
+      "structureId": "FB-GY-03",
+      "structureName": "FB-CC-03",
+      "colorId": "CC-02",
+      "colorName": "Apricot",
+      "hex": "#e9ccc5",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-03_CC-02.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-03_CC-02.jpg",
+      "textureBytes": 4910689,
+      "textureMB": 4.68,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-03_CC-03",
+      "structureId": "FB-GY-03",
+      "structureName": "FB-CC-03",
+      "colorId": "CC-03",
+      "colorName": "Olive",
+      "hex": "#abb86b",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-03_CC-03.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-03_CC-03.jpg",
+      "textureBytes": 4229658,
+      "textureMB": 4.03,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-03_CC-04",
+      "structureId": "FB-GY-03",
+      "structureName": "FB-CC-03",
+      "colorId": "CC-04",
+      "colorName": "Straw",
+      "hex": "#f9d698",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-03_CC-04.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-03_CC-04.jpg",
+      "textureBytes": 5638759,
+      "textureMB": 5.38,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-03_CC-05",
+      "structureId": "FB-GY-03",
+      "structureName": "FB-CC-03",
+      "colorId": "CC-05",
+      "colorName": "Arabian Spice",
+      "hex": "#9e5239",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-03_CC-05.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-03_CC-05.jpg",
+      "textureBytes": 4265681,
+      "textureMB": 4.07,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-03_CC-06",
+      "structureId": "FB-GY-03",
+      "structureName": "FB-CC-03",
+      "colorId": "CC-06",
+      "colorName": "Coral Haze",
+      "hex": "#b87857",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-03_CC-06.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-03_CC-06.jpg",
+      "textureBytes": 4134270,
+      "textureMB": 3.94,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-03_CC-07",
+      "structureId": "FB-GY-03",
+      "structureName": "FB-CC-03",
+      "colorId": "CC-07",
+      "colorName": "Fog",
+      "hex": "#d3d3d3",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-03_CC-07.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-03_CC-07.jpg",
+      "textureBytes": 7905976,
+      "textureMB": 7.54,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-03_CC-08",
+      "structureId": "FB-GY-03",
+      "structureName": "FB-CC-03",
+      "colorId": "CC-08",
+      "colorName": "Glacier",
+      "hex": "#b6b5b8",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-03_CC-08.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-03_CC-08.jpg",
+      "textureBytes": 6953013,
+      "textureMB": 6.63,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-03_CC-09",
+      "structureId": "FB-GY-03",
+      "structureName": "FB-CC-03",
+      "colorId": "CC-09",
+      "colorName": "Birch",
+      "hex": "#95948d",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-03_CC-09.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-03_CC-09.jpg",
+      "textureBytes": 3794131,
+      "textureMB": 3.62,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-03_CC-11",
+      "structureId": "FB-GY-03",
+      "structureName": "FB-CC-03",
+      "colorId": "CC-11",
+      "colorName": "Smoke Blue",
+      "hex": "#6e7f92",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-03_CC-11.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-03_CC-11.jpg",
+      "textureBytes": 2514014,
+      "textureMB": 2.4,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-03_CC-12",
+      "structureId": "FB-GY-03",
+      "structureName": "FB-CC-03",
+      "colorId": "CC-12",
+      "colorName": "Shadow",
+      "hex": "#6e8890",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-03_CC-12.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-03_CC-12.jpg",
+      "textureBytes": 3166178,
+      "textureMB": 3.02,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-03_CC-13",
+      "structureId": "FB-GY-03",
+      "structureName": "FB-CC-03",
+      "colorId": "CC-13",
+      "colorName": "Sand",
+      "hex": "#c6ab9a",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-03_CC-13.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-03_CC-13.jpg",
+      "textureBytes": 5876402,
+      "textureMB": 5.6,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-03_CC-14",
+      "structureId": "FB-GY-03",
+      "structureName": "FB-CC-03",
+      "colorId": "CC-14",
+      "colorName": "Pearl",
+      "hex": "#c6b4a4",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-03_CC-14.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-03_CC-14.jpg",
+      "textureBytes": 7614777,
+      "textureMB": 7.26,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-03_CC-15",
+      "structureId": "FB-GY-03",
+      "structureName": "FB-CC-03",
+      "colorId": "CC-15",
+      "colorName": "Dune",
+      "hex": "#96795e",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-03_CC-15.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-03_CC-15.jpg",
+      "textureBytes": 3952159,
+      "textureMB": 3.77,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-03_CC-16",
+      "structureId": "FB-GY-03",
+      "structureName": "FB-CC-03",
+      "colorId": "CC-16",
+      "colorName": "Mirage",
+      "hex": "#8e9d98",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-03_CC-16.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-03_CC-16.jpg",
+      "textureBytes": 4599801,
+      "textureMB": 4.39,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-03_CC-17",
+      "structureId": "FB-GY-03",
+      "structureName": "FB-CC-03",
+      "colorId": "CC-17",
+      "colorName": "Taupe",
+      "hex": "#a29083",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-03_CC-17.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-03_CC-17.jpg",
+      "textureBytes": 4834046,
+      "textureMB": 4.61,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-03_CC-18",
+      "structureId": "FB-GY-03",
+      "structureName": "FB-CC-03",
+      "colorId": "CC-18",
+      "colorName": "Concrete Gray",
+      "hex": "#909ea8",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-03_CC-18.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-03_CC-18.jpg",
+      "textureBytes": 6958156,
+      "textureMB": 6.64,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-03_CC-19",
+      "structureId": "FB-GY-03",
+      "structureName": "FB-CC-03",
+      "colorId": "CC-19",
+      "colorName": "Mushroom",
+      "hex": "#aeadaf",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-03_CC-19.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-03_CC-19.jpg",
+      "textureBytes": 4511362,
+      "textureMB": 4.3,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    },
+    {
+      "key": "FB-GY-03_CC-20",
+      "structureId": "FB-GY-03",
+      "structureName": "FB-CC-03",
+      "colorId": "CC-20",
+      "colorName": "Alloy",
+      "hex": "#767a82",
+      "textureUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/images/fabric/color-core/panels/FB-GY-03_CC-20.jpg",
+      "thumbnailUrl": "https://d27tzvhakjjy0q.cloudfront.net/static/_thumbcache/fabric/color-core/panels/FB-GY-03_CC-20.jpg",
+      "textureBytes": 3483429,
+      "textureMB": 3.32,
+      "verified": {
+        "texture": 200,
+        "thumbnail": 200
+      }
+    }
+  ]
+}
