@@ -37,6 +37,8 @@ export default function TopBar({ view, setView, spin, setSpin, onOpenFabrics, st
   const canUndo = useStore((s) => s.undoStack.length > 0)
   const preview = useStore((s) => s.preview)
   const setPreview = useStore((s) => s.setPreview)
+  const showMeasures = useStore((s) => s.showMeasures)
+  const toggle = useStore((s) => s.toggle)
 
   // Clearing is destructive and easy to hit by accident, so the button becomes
   // its own confirmation rather than firing straight away.
@@ -229,6 +231,26 @@ export default function TopBar({ view, setView, spin, setSpin, onOpenFabrics, st
         >
           <span aria-hidden="true" className={spin ? 'animate-spin [animation-duration:3s]' : ''}>↻</span>
           Spin
+        </Button>
+
+        {/* Dimensions are ON to start with, so this button is a way to get
+            them OUT OF THE WAY rather than a feature to discover. It sits
+            before Preview because Preview already implies it: a client-facing
+            view has no dimensions in it whatever this says, and the disabled
+            state says so rather than leaving a live-looking button that does
+            nothing. */}
+        <Button
+          active={showMeasures && !preview}
+          disabled={preview}
+          onClick={() => toggle('showMeasures')}
+          className="h-7 px-2.5"
+          aria-pressed={showMeasures && !preview}
+          title={preview
+            ? 'Preview hides dimensions — turn Preview off to measure.'
+            : 'Show the clear distance from the selected set to its neighbours within 3 m. Select a set to see them.'}
+        >
+          <span aria-hidden="true">↔</span>
+          Measure
         </Button>
 
         <Button

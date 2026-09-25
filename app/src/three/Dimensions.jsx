@@ -83,6 +83,7 @@ export default function Dimensions({ g }) {
   const items = useStore((s) => s.items)
   const selectedId = useStore((s) => s.selectedId)
   const preview = useStore((s) => s.preview)
+  const showMeasures = useStore((s) => s.showMeasures)
 
   const selected = items.find((i) => i.id === selectedId) ?? null
   const gaps = useMemo(
@@ -91,8 +92,9 @@ export default function Dimensions({ g }) {
   )
 
   // Preview is the client-facing view; a layout tool's measurements are not
-  // part of it.
-  if (preview || !gaps.length) return null
+  // part of it. The toggle is the other way in — preview still wins over it,
+  // because a client-facing view with dimensions on is not a preview.
+  if (preview || !showMeasures || !gaps.length) return null
 
   return (
     <group>

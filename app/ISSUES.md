@@ -5312,6 +5312,156 @@ the two ends of a taper differ. Proved by nine reintroductions.
 
 ---
 
+## Dimensions on a switch
+
+Asked for: a button to turn the neighbour distances on and off, on by default.
+
+**Fix** `showMeasures`, a view flag beside `showGrid` and `showRoom`, and a
+Measure button in the top bar next to Spin and Preview.
+
+**On by default, so the button is a way OUT.** The question the dimensions
+answer — how far apart are these — is the one being asked while a layout is
+being set out, and a measurement you have to go and switch on is one you do not
+take. Off is for the moment you want to look at the ceiling rather than set it
+out.
+
+**Preview still wins.** A client-facing view with setting-out dimensions in it
+is not a preview, so the toggle cannot put them back there. The button goes
+`disabled` and its tooltip says why, rather than staying live and doing
+nothing — and the flag is remembered, so leaving preview gives back the state
+you had. (Selecting again is what brings the dimensions back: `setPreview(true)`
+clears the selection, as it always has, and there is nothing to measure from
+without one.)
+
+**A view flag, not a document one.** It is not in `toJSON`, not in the share
+link and not in the session — guarded three ways. A link that arrived with
+someone else's dimensions switched off would be answering a question the sender
+never asked, and what is ordered does not change either way.
+
+**The switch decides whether they are DRAWN, never what they say.** Guarded by
+asserting `neighbourGaps` returns the same gaps with it on and off.
+
+**Guard** That the flag starts on, that the scene reads it and draws nothing
+when it is off, that preview overrules it, that the button exists, is dead in
+preview, and does not look pressed there; that it is in neither the link, the
+session nor the document; and that toggling it changes nothing about the
+measurement itself. Proved by seven reintroductions.
+
+2108 passing, 8 pre-existing failures.
+
+---
+
+## Layouts you saved yourself
+
+Asked for: custom presets.
+
+**A built-in preset cannot be one.** It is code — a `product()` recipe and an
+`arrange()` that computes positions from the grid it is handed — and that is
+exactly what lets "Hexagon field" work in a boardroom and a sports hall without
+being written twice. Nobody can type a function into a panel.
+
+**So a saved layout is the other kind of thing:** a snapshot of a ceiling that
+existed, carrying every set where it was put. The price is that it cannot adapt
+to a room it was not laid out in — stated to the user before they save, and
+again in the panel when the saved zone was bigger than the current one, so a
+half-placed result is explicable rather than mysterious.
+
+**It lives in the Layout presets dropdown itself** — one list under one
+heading, with a disabled `— saved —` row between the two kinds when both are
+present. It went through a panel of its own and then a captioned half of this
+one before landing here; both were still a second place to look for the same
+question, which is what "put it in the same section" meant.
+
+That took solving one thing: the panel was hidden entirely for a product with
+no built-in presets, so putting saved layouts in it would have taken somebody's
+own work off the screen whenever the list that ships happened to be empty. The
+panel is now always rendered and the BUILT-IN ROWS hide instead.
+
+**Which left a dead constant.** `PRESET_PRODUCTS` existed only to gate the
+panel; once nothing gated it, the list was read by nothing and survived purely
+because a comment still named it — exactly how a free identifier ships. It is
+gone, and the built-in half now derives its own visibility from
+`mine.length`, which cannot go stale when a preset is written for a new
+product. Guarded both ways.
+
+**Stored as the document `toJSON` already writes.** Not a third shape: the same
+versioned thing the Save button downloads and the session keeps. A saved layout
+is therefore read by the code that already reads documents, is covered by the
+round-trip guards that already exist, and carries its own schema version if the
+format moves.
+
+**One loop, not two.** `fromJSON` opens a document into the room it names;
+`applyLayout` drops one into the room you are already in. Those differ in one
+thing — which grid — so the item-building loop came out into `itemsFromDoc`
+and the half-placed-group rule into `keepGroups`. Two copies would have drifted
+on reconciliation, on rescaling, or on what to do with an item the ceiling
+cannot hold.
+
+**It asks before replacing.** The built-in presets replace without asking,
+which is fine for a list you cannot add to and less fine for one you can, where
+a mis-click costs a ceiling. Only when there is something to lose — replacing
+an empty ceiling is not a question. Ctrl+Z undoes it either way.
+
+**A name that is taken is never overwritten**, it is numbered — silently
+replacing a saved ceiling because the names matched is loss nobody notices
+until later. And the number is stripped before the next one is worked out:
+numbering "Studio A (2)" as a base of its own gives "Studio A (2) (2)", and
+re-importing compounds it. Measured before it was fixed.
+
+**Import merges, never replaces.** Importing is how a second machine catches
+up; replacing would delete whatever that machine had of its own.
+
+---
+
+### Two things this turned up
+
+**A dynamic import gets a different module instance under Vite** — the trap
+`store.js` already documents for the store. The browser test drove export and
+import through `await import('/ceiling/src/lib/layouts.js')`, got a module whose
+`LAYOUTS` was a fresh empty array, exported nothing, and then wrote that nothing
+over the real list — wiping the two layouts it had just saved. The round trip is
+asserted in `verify.mjs` against a standing-in `localStorage` instead, where
+there is only ever one instance. The UI paths stay in the browser, where they
+belong.
+
+**Every storage call is wrapped.** `localStorage` throws rather than returning
+null in a private window, with site data blocked, and when the quota is full. A
+layout list that cannot be saved is a disappointment; a panel that cannot render
+because reading it threw is a broken app. Proved by a break: unwrapping the read
+does not fail a guard, it stops the suite finishing.
+
+**Guard** That a saved layout is a document and not a third shape; that the
+panel is its own and is not hidden with the product-filtered presets; that
+opening a document and applying a layout share one loop and one group rule;
+and, against a standing-in localStorage, that an empty ceiling is refused, a
+taken name is numbered without compounding, renaming cannot collide, export
+names its format, import merges and refuses rubbish, delete removes exactly
+one, and a reload finds them all again. Proved by nine reintroductions.
+
+**A guard caught a regression in the merge.** The old panel derived the
+Select's displayed value, so a baffle preset key stopped being shown once the
+product changed; passing the last-run key straight through brought back a
+control displaying a row no longer in its own list. The guard that had been
+written for the original derivation failed on the new spelling and was right to.
+
+**And the list did not refresh itself.** `LAYOUTS` is mutated in place, so its
+identity never changes — and `useSyncExternalStore` compares snapshots with
+Object.is, which meant React was told nothing had happened after every save,
+delete and import. Saving only appeared to work because the panel set other
+state in the same tick; an import, which sets none, left the dropdown showing
+the old list. It watches a version counter now.
+
+**One test fault worth recording**, because it cost a debugging round twice: an
+option is matched by POSITION, not by its text. The row's `textContent` is
+`Studio A✓` — the tick for the selected row is inside it — so an equality match
+found nothing, clicked nothing, and looked exactly like the feature being
+broken. `applyLayout` driven straight from the store placed 2 of 2, which is
+what separated the two.
+
+2139 passing, 8 pre-existing failures.
+
+---
+
 ---
 
 ## Process notes

@@ -1,8 +1,12 @@
-import { useState } from 'react'
+import { useRef, useState, useSyncExternalStore } from 'react'
 import { useStore, CEILING_LIMITS, roomZone, productMissing } from '../lib/store.js'
 import { ROOMS } from '../lib/rooms.js'
 import { PRODUCT_TYPES } from '../lib/catalog.js'
 import { PRESETS } from '../lib/presets.js'
+import {
+  LAYOUTS, subscribe as subscribeLayouts, layoutsVersion, deleteLayout,
+  exportLayouts, importLayouts, zoneOf,
+} from '../lib/layouts.js'
 import { gridOf } from '../lib/grid.js'
 import { BACKGROUNDS } from '../lib/theme.js'
 import BaffleFields from './BaffleFields.jsx'
@@ -15,21 +19,6 @@ import { Panel, Button, Choice, Note, Select, Empty, Field, Stepper } from './bi
 // skips them. Hidden while there is no work on it, and while auto-fill — the
 // only thing that reads obstructions — is hidden too.
 const SHOW_OBSTRUCT = false
-
-/**
- * The products Layout presets are offered on.
- *
- * Derived from what the presets ARE, not from a judgement about which products
- * deserve them: every entry in lib/presets builds `defaultBaffleParams()`, so
- * baffles is the only product any of them can lay out. On clouds and tiles the
- * buttons quietly swapped the product and replaced the ceiling with a baffle
- * field, which is not a preset misbehaving — it is a preset for a different
- * product being offered where it does not belong.
- *
- * When a cloud or tile preset is written, add its product here and the section
- * comes back for it.
- */
-const PRESET_PRODUCTS = ['baffles', 'clouds']
 
 const TOOLS = [
   { value: 'place', label: 'Place', hint: 'Click the ceiling to add a set' },
@@ -234,73 +223,265 @@ function BackgroundPanel() {
 }
 
 /**
- * One-click layouts. They replace the current layout; Ctrl+Z restores it.
+ * Layout presets: the ones that ship, and the ones you saved.
  *
- * FILTERED TO THE PRODUCT ON THE BRUSH, which is the whole of what used to be
- * "baffles only". Every preset used to build defaultBaffleParams(), so offering
- * the buttons on any other product replaced the ceiling with baffles and left
- * the product picker saying something else. Now a preset names its own product
- * and this shows the ones that match; a product with none shows no panel at
- * all, via PRESET_PRODUCTS.
+ * ONE LIST, NOT TWO. They answer the same question — what should be on this
+ * ceiling — so they are one dropdown with one heading rather than a panel
+ * split into halves with a rule down the middle. A saved layout that only
+ * appears under its own caption is a second feature to find; in the list, it
+ * is just another layout.
+ *
+ * The two differ in exactly one way, and it is not a reason to separate them:
+ * the built-in list is FILTERED to the product on the brush, because each
+ * preset places one product and offering a cloud preset on a baffle brush is
+ * offering to swap the product out from under you. A saved layout is a whole
+ * ceiling and may hold four products at once, so there is nothing to filter it
+ * by. A disabled row carries the caption when both kinds are present.
+ *
+ * WHICH PRODUCTS HAVE PRESETS IS DERIVED, not listed. It used to be a
+ * PRESET_PRODUCTS constant that hid the whole panel — which, once saved
+ * layouts lived here, would have taken somebody's own work off the screen
+ * whenever the shipped list happened to be empty. `mine.length` cannot go
+ * stale either: write a tile preset and it appears for tiles.
+ *
+ * See lib/presets.js for what a built-in one is, and lib/layouts.js for what a
+ * saved one is and why it lives in this browser.
  */
 function PresetPanel() {
   const applyPreset = useStore((s) => s.applyPreset)
+  const applyLayout = useStore((s) => s.applyLayout)
+  const saveLayout = useStore((s) => s.saveLayout)
   const product = useStore((s) => s.brush.type)
   const modelName = useStore((s) => s.brush.params.modelName)
+  const items = useStore((s) => s.items)
+  const room = useStore((s) => s.room())
+  // Subscribe to the VERSION, then read the list — see layouts.js. Watching
+  // the array itself says "unchanged" forever, because it is mutated in place.
+  useSyncExternalStore(subscribeLayouts, layoutsVersion, layoutsVersion)
+  const layouts = LAYOUTS
+
   const [msg, setMsg] = useState(null)
-  // The layout last RUN, not a setting. See the note on `value` below.
+  // What was last RUN, not a setting. See the note on `value` below.
   const [ran, setRan] = useState(null)
   // Which row the dropdown is highlighting, so its description can be read
   // before committing. Null when the list is shut.
   const [over, setOver] = useState(null)
+  // The saved layout waiting on a yes. Replacing a ceiling somebody has been
+  // working on is worth one question, and only when there is something to lose.
+  const [confirming, setConfirming] = useState(null)
+  const [naming, setNaming] = useState(false)
+  const [name, setName] = useState('')
+  const fileRef = useRef()
+
+  const say = (t) => { setMsg(t); setTimeout(() => setMsg(null), 6000) }
+
   const mine = PRESETS.filter((p) => (p.type ?? 'baffles') === product)
+  const hasBuiltIns = mine.length > 0
 
-  // Derived, not stored: switching product makes a baffle preset key meaningless
-  // on a cloud brush. Deriving it means there is no stale value to clear and no
-  // effect to forget to write.
-  const chosen = mine.some((p) => p.key === ran) ? ran : null
-  const showing = mine.find((p) => p.key === (over ?? chosen)) ?? null
+  // Derived, not stored: switching product makes a baffle preset key
+  // meaningless on a cloud brush. Deriving it means there is no stale value to
+  // clear and no effect to forget to write. A saved layout survives the switch,
+  // because it is not a product's.
+  const key = over ?? ran
+  const preset = mine.find((p) => p.key === key) ?? null
+  const layout = layouts.find((l) => l.id === key) ?? null
+  const picked = layouts.find((l) => l.id === ran) ?? null
+  // What the control may SHOW: only a row that is still in its own list. A
+  // preset key is meaningless once the product changes; a saved layout belongs
+  // to no product and survives.
+  const shown = (mine.some((p) => p.key === ran) || layouts.some((l) => l.id === ran))
+    ? ran
+    : ''
 
-  const run = (key) => {
-    const p = mine.find((x) => x.key === key)
+  const zone = roomZone(room)
+  const saved = layout ? zoneOf(layout) : null
+  // Worth saying BEFORE anything is dropped, not after: a layout laid out in a
+  // bigger ceiling is the usual reason half of it does not arrive.
+  const smaller = saved && (saved.w > zone.w + 0.01 || saved.l > zone.l + 0.01)
+
+  const runPreset = (k) => {
+    const p = mine.find((x) => x.key === k)
     if (!p) return
-    setRan(key)
-    const { placed, skipped } = applyPreset(key)
-    setMsg(placed
+    const { placed, skipped } = applyPreset(k)
+    say(placed
       ? `${p.label}: ${placed} set${placed === 1 ? '' : 's'}${skipped ? `, ${skipped} did not fit` : ''}`
       : `${p.label} does not fit this ceiling`)
-    setTimeout(() => setMsg(null), 5000)
+  }
+
+  const commitLayout = (id) => {
+    const { placed, skipped } = applyLayout(id)
+    const l = layouts.find((x) => x.id === id)
+    say(placed
+      ? `${l?.name ?? 'Layout'}: ${placed} set${placed === 1 ? '' : 's'}${skipped ? `, ${skipped} did not fit` : ''}`
+      : `${l?.name ?? 'That layout'} does not fit this ceiling`)
+    setConfirming(null)
+  }
+
+  const run = (k) => {
+    setRan(k)
+    setConfirming(null)
+    if (mine.some((p) => p.key === k)) { runPreset(k); return }
+    if (!layouts.some((l) => l.id === k)) return
+    // ASKED ONLY OF THE LIST YOU CAN ADD TO. The shipped presets replace
+    // without a question, which is fine for five rows nobody can change;
+    // a mis-click on your own layout costs a ceiling you built.
+    if (!items.length) commitLayout(k)
+    else setConfirming(k)
+  }
+
+  const doSave = () => {
+    const l = saveLayout(name)
+    setNaming(false)
+    setName('')
+    if (!l) say('This browser refused to store it — private window, or storage full')
+    else { setRan(l.id); say(`Saved as “${l.name}”`) }
+  }
+
+  const doExport = () => {
+    const blob = new Blob([exportLayouts()], { type: 'application/json' })
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = 'univicoustic-layouts.json'
+    a.click()
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000)
+  }
+
+  const onFile = (e) => {
+    const f = e.target.files?.[0]
+    e.target.value = '' // so the same file can be picked twice
+    if (!f) return
+    const r = new FileReader()
+    r.onload = () => {
+      try {
+        const { added, skipped } = importLayouts(String(r.result))
+        say(`${added} layout${added === 1 ? '' : 's'} added${skipped ? `, ${skipped} unreadable` : ''}`)
+      } catch (err) {
+        say(err.message)
+      }
+    }
+    r.readAsText(f)
   }
 
   return (
     <Panel title="Layout presets">
       {/* A menu of ACTIONS wearing a dropdown, which is worth being honest
           about: every other Select in this panel shows live state, and this one
-          cannot. It keeps showing the layout you ran, which is true the instant
-          it runs and goes stale as soon as a panel is moved or deleted — there
-          is no way for it to know. Chosen deliberately over resetting to the
+          cannot. It keeps showing what you ran, which is true the instant it
+          runs and goes stale as soon as a set is moved or deleted — there is no
+          way for it to know. Chosen deliberately over resetting to the
           placeholder, because reading back what you last ran is worth more than
           a control that never admits to anything. */}
       <Select
-        value={chosen ?? ''}
+        value={shown}
         options={[
           { value: '', label: 'Choose a layout…', disabled: true },
           ...mine.map((p) => ({ value: p.key, label: p.label })),
+          // A caption inside the list, so the two kinds are told apart without
+          // the panel being cut in two. Only where both are present: a lone
+          // heading over the only rows there are says nothing.
+          ...(hasBuiltIns && layouts.length
+            ? [{ value: '__saved', label: '— saved —', disabled: true }]
+            : []),
+          ...layouts.map((l) => ({ value: l.id, label: l.name })),
         ]}
         onChange={run}
         onHighlight={setOver}
       />
+
       <div className="mt-1.5 space-y-0.5">
-        {/* The highlighted layout's description, or the one you ran. Five
-            descriptions used to be on screen at once under five buttons; this
-            is the one that is being considered right now, which is the only one
-            anybody reads. */}
-        {showing && <Note>{showing.hint}</Note>}
+        {/* Whatever is under the cursor, or what was run. One description at a
+            time: it is the only one anybody reads. */}
+        {preset && <Note>{preset.hint}</Note>}
+        {layout && (
+          <Note>
+            {layout.doc.items.length} set{layout.doc.items.length === 1 ? '' : 's'}
+            {saved ? ` · saved in a ${saved.w.toFixed(1)} × ${saved.l.toFixed(1)} m zone` : ''}
+          </Note>
+        )}
+        {smaller && !confirming && (
+          <Note tone="warn">
+            This ceiling is smaller than the one it was laid out in — expect some sets
+            not to fit.
+          </Note>
+        )}
         {msg && <Note tone="warn">{msg}</Note>}
-        {modelName && product === 'baffles'
+        {hasBuiltIns && (modelName && product === 'baffles'
           ? <Note tone="warn">Presets will arrange <b>{modelName}</b> — only the layout comes from the preset.</Note>
-          : <Note>Each preset brings its own product and finish.</Note>}
-        <Note>A preset replaces the current layout — Ctrl+Z restores it.</Note>
+          : <Note>Each preset brings its own product and finish.</Note>)}
+        <Note>A layout replaces the current one — Ctrl+Z restores it.</Note>
+      </div>
+
+      {confirming && (
+        <div className="mt-1.5 space-y-1.5">
+          <Note tone="warn">
+            This replaces the {items.length} set{items.length === 1 ? '' : 's'} on the
+            ceiling. Ctrl+Z undoes it.
+          </Note>
+          <div className="grid grid-cols-2 gap-1.5">
+            <Button variant="danger" className="h-7" onClick={() => commitLayout(confirming)}>Replace</Button>
+            <Button variant="outline" className="h-7" onClick={() => setConfirming(null)}>Cancel</Button>
+          </div>
+        </div>
+      )}
+
+      {naming ? (
+        <div className="mt-1.5 space-y-1.5">
+          <input
+            autoFocus
+            value={name}
+            placeholder="Name this layout"
+            onChange={(e) => setName(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') { e.preventDefault(); doSave() }
+              else if (e.key === 'Escape') { e.preventDefault(); setNaming(false); setName('') }
+            }}
+            className="h-7 w-full rounded-md border border-line bg-surface-2 px-2 text-[12px] text-txt outline-none focus:border-accent/60"
+          />
+          <div className="grid grid-cols-2 gap-1.5">
+            <Button variant="solid" className="h-7" onClick={doSave}>Save</Button>
+            <Button variant="outline" className="h-7" onClick={() => { setNaming(false); setName('') }}>Cancel</Button>
+          </div>
+        </div>
+      ) : (
+        <div className={`mt-1.5 grid gap-1.5 ${picked ? 'grid-cols-2' : 'grid-cols-1'}`}>
+          <Button
+            variant="outline" className="h-7"
+            disabled={!items.length}
+            title={items.length ? undefined : 'Place something first'}
+            onClick={() => { setName(''); setNaming(true) }}
+          >
+            Save this ceiling
+          </Button>
+          {picked && (
+            <Button
+              variant="danger" className="h-7"
+              onClick={() => {
+                const gone = picked.name
+                deleteLayout(picked.id)
+                setRan(null)
+                say(`Deleted “${gone}”`)
+              }}
+            >
+              Delete
+            </Button>
+          )}
+        </div>
+      )}
+
+      <div className="mt-1.5 grid grid-cols-2 gap-1.5">
+        <Button variant="outline" className="h-7" disabled={!layouts.length} onClick={doExport}>
+          Export
+        </Button>
+        <input ref={fileRef} type="file" accept="application/json" onChange={onFile} className="hidden" />
+        <Button variant="outline" className="h-7" onClick={() => fileRef.current?.click()}>Import</Button>
+      </div>
+
+      <div className="mt-1.5">
+        <Note>
+          {layouts.length
+            ? 'Saved layouts are kept in this browser only — Export to move them.'
+            : 'Save a ceiling you want back later. Kept in this browser only.'}
+        </Note>
       </div>
     </Panel>
   )
@@ -451,7 +632,12 @@ export default function LeftPanel() {
           layout or fill the fields in yourself. Below the product because the
           list depends on it — a preset panel above the control that decides
           what it contains changes under you as you use it. */}
-      {PRESET_PRODUCTS.includes(brush.type) && <PresetPanel />}
+      {/* ALWAYS, where this used to be gated on the product having presets.
+          The panel now holds saved layouts too, and those are not a baffle
+          thing or a cloud thing — hiding the panel took somebody's own work
+          off the screen because a list that ships happened to be empty. The
+          built-in half hides itself instead; see PresetPanel. */}
+      <PresetPanel />
 
       {/* Tool, then product, then what a new one is made of — the three
           decisions in the order they are actually taken. Everything after this

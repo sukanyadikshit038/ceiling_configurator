@@ -24,6 +24,7 @@ import {
 import { useStore } from './lib/store.js'
 import { readLink, decodeConfig } from './lib/share.js'
 import { readSession, clearSession, keepSession } from './lib/session.js'
+import { loadLayouts } from './lib/layouts.js'
 
 // Everything the first render depends on is read before mounting:
 //   rooms     — the store needs one to have a grid at all
@@ -55,6 +56,9 @@ async function boot() {
 
   // Non-fatal: baffles are parametric, so the app works with no model files,
   // and finishes fall back to flat swatches if their images do not load.
+  // Saved layouts: localStorage, so a read rather than a fetch.
+  loadLayouts()
+
   await Promise.all([
     loadModelManifest(),
     loadFabrics().then(initFabricTextures),

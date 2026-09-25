@@ -76,6 +76,10 @@ import {
 import {
   SESSION_KEY, readSession, writeSession, clearSession, keepSession,
 } from '../src/lib/session.js'
+import {
+  LAYOUTS, loadLayouts, saveLayout, renameLayout, deleteLayout,
+  exportLayouts, importLayouts, zoneOf, layoutsVersion,
+} from '../src/lib/layouts.js'
 import * as THREE from 'three'
 import {
   looksLikeFin, finPositions, FIN_ASPECT, modelMinDrop, buildModelRun, runDropOffset,
@@ -3246,11 +3250,18 @@ section('LAYOUT PRESETS NAME THEIR PRODUCT — baffles and clouds')
 
   {
     const src = fs.readFileSync('src/ui/LeftPanel.jsx', 'utf8')
-    ok('the section is offered on the two products that have presets',
-      /const PRESET_PRODUCTS = \['baffles', 'clouds'\]/.test(src),
-      'the preset list is offered on something no preset can build')
-    ok('and the panel is gated on that rather than always rendered',
-      /PRESET_PRODUCTS\.includes\(brush\.type\) && <PresetPanel \/>/.test(src))
+    // WHICH PRODUCTS HAVE PRESETS IS DERIVED FROM THE PRESETS. It used to be
+    // a PRESET_PRODUCTS list that gated the whole panel; the panel now has to
+    // render for saved layouts whatever the product, which left that constant
+    // read by nothing and alive only because a comment named it. A derived
+    // answer also cannot go stale when a preset is written for a new product.
+    ok('which products have presets is derived, not listed',
+      /const hasBuiltIns = mine\.length > 0/.test(src)
+      && !/const PRESET_PRODUCTS/.test(src),
+      'PRESET_PRODUCTS is back, or the derivation is gone')
+    ok('and the built-in half is what hides, not the panel',
+      /\{hasBuiltIns && \(/.test(src) && /<PresetPanel \/>/.test(src)
+      && !/includes\(brush\.type\) && <PresetPanel/.test(src))
     // Filtered, not just gated. Without this a cloud would be shown the baffle
     // presets, which is the old fault with an extra step.
     ok('and it lists only the presets of the product on the brush',
@@ -3263,15 +3274,18 @@ section('LAYOUT PRESETS NAME THEIR PRODUCT — baffles and clouds')
     // and stale as soon as a panel is moved. Chosen over resetting to the
     // placeholder, and the staleness is written into the component.
     ok('the presets are a dropdown, not a stack of buttons',
-      /<Select\s+value=\{chosen \?\? ''\}/.test(src) && !/mine\.map\(\(p\) => \(\s*<Button/.test(src),
+      /<Select\s+value=\{shown\}/.test(src) && !/mine\.map\(\(p\) => \(\s*<Button/.test(src),
       'the preset panel has gone back to one button per preset')
     ok('with a blank first entry, because no layout has been run yet',
       /label: 'Choose a layout/.test(src))
     // Derived rather than stored: a baffle preset key means nothing on a cloud
     // brush, and deriving it leaves no stale value to clear and no effect to
     // forget to write.
+    // A PRESET KEY IS MEANINGLESS ON ANOTHER PRODUCT, and a saved layout is
+    // meaningless on none — it belongs to no product, so it survives the
+    // switch. The control may show only a row still in its own list.
     ok('and the one it shows is filtered by product, so it cannot go stale across a switch',
-      /const chosen = mine\.some\(\(p\) => p\.key === ran\) \? ran : null/.test(src),
+      /mine\.some\(\(p\) => p\.key === ran\) \|\| layouts\.some\(\(l\) => l\.id === ran\)/.test(src),
       'the preset dropdown can show a layout the current product does not have')
 
     // The descriptions moved from five lines to one, and follow the HIGHLIGHT
@@ -3279,7 +3293,8 @@ section('LAYOUT PRESETS NAME THEIR PRODUCT — baffles and clouds')
     // followed hover would be missing exactly when it was most needed.
     ok('the highlighted layout describes itself before it is committed to',
       /onHighlight=\{setOver\}/.test(src)
-      && /\{showing && <Note>\{showing\.hint\}<\/Note>\}/.test(src),
+      && /const key = over \?\? ran/.test(src)
+      && /\{preset && <Note>\{preset\.hint\}<\/Note>\}/.test(src),
       'the preset hint no longer follows the highlight')
     ok('and Select reports that highlight, including null when it shuts',
       /highlight\.current\?\.\(open && active >= 0 \? rows\[active\]\?\.value \?\? null : null\)/
@@ -9351,6 +9366,227 @@ section('BAFFLE HEIGHT — the published sizes, and anything between them')
   // would come out of the extruder straight.
   const pw = parseWidth(tp.width)
   ok('the two ends differ, which is what makes it a taper', pw.a !== pw.b, JSON.stringify(pw))
+}
+
+section('DIMENSIONS ON A SWITCH — on to start with')
+{
+  // Asked for: a button that turns the neighbour distances off and on, on by
+  // default.
+  const store = codeOf(fs.readFileSync('src/lib/store.js', 'utf8'))
+  const dims = codeOf(fs.readFileSync('src/three/Dimensions.jsx', 'utf8'))
+  const bar = codeOf(fs.readFileSync('src/ui/TopBar.jsx', 'utf8'))
+
+  ok('the flag starts ON', /showMeasures: true/.test(store),
+    'dimensions no longer open switched on')
+  ok('the scene reads it', /const showMeasures = useStore\(\(s\) => s\.showMeasures\)/.test(dims))
+  ok('and draws nothing when it is off', /!showMeasures/.test(dims),
+    'the toggle is read and ignored')
+  ok('there is a button for it', /Measure/.test(bar) && /toggle\('showMeasures'\)/.test(bar),
+    'the button is gone')
+
+  // PREVIEW STILL WINS. A client-facing view with setting-out dimensions in it
+  // is not a preview, so the toggle cannot turn them back on there — and the
+  // button says so instead of looking live and doing nothing.
+  ok('preview overrules it', /if \(preview \|\| !showMeasures/.test(dims),
+    'the toggle can put dimensions into the preview')
+  ok('and the button is dead while preview is on', /disabled=\{preview\}/.test(bar))
+  ok('rather than silently forgetting the toggle',
+    /active=\{showMeasures && !preview\}/.test(bar))
+
+  // A VIEW FLAG, like showGrid and showRoom beside it: what is ordered does
+  // not change, so it has no business in the document, the link or the
+  // session. A share link that arrived with someone else's dimensions off
+  // would be answering a question the sender never asked.
+  const share = codeOf(fs.readFileSync('src/lib/share.js', 'utf8'))
+  const session = codeOf(fs.readFileSync('src/lib/session.js', 'utf8'))
+  ok('it is not in the share link', !/showMeasures/.test(share))
+  ok('nor in the session', !/showMeasures/.test(session))
+
+  reset()
+  ok('and not in the document', !('showMeasures' in S().toJSON()),
+    Object.keys(S().toJSON()).join(','))
+
+  // --- and it actually flips ----------------------------------------------
+  ok('a session opens with it on', S().showMeasures === true, String(S().showMeasures))
+  S().toggle('showMeasures')
+  ok('the toggle turns it off', S().showMeasures === false)
+  S().toggle('showMeasures')
+  ok('and on again', S().showMeasures === true)
+
+  // The measurement itself is untouched — the switch decides whether it is
+  // DRAWN, never what it says.
+  const a = S().placeAt(...at(10, 10))
+  const bItem = S().placeAt(...at(10, 26))
+  ok('two sets to measure between', !!a && !!bItem)
+  if (a && bItem) {
+    const g = gridOf(S().room())
+    const withOn = neighbourGaps(S().items[0], S().items, g).length
+    S().toggle('showMeasures')
+    const withOff = neighbourGaps(S().items[0], S().items, g).length
+    ok('the gaps are the same whether or not they are shown',
+      withOn === withOff && withOn > 0, `${withOn} vs ${withOff}`)
+    S().toggle('showMeasures')
+  }
+}
+
+section('LAYOUTS YOU SAVED YOURSELF')
+{
+  // Asked for: custom presets. A built-in preset is code — a product() recipe
+  // and an arrange() that computes positions from the grid — which nobody can
+  // type into a panel. So a saved layout is the other kind of thing: a
+  // snapshot of a ceiling that existed, stored as the document toJSON already
+  // writes.
+  const lib = codeOf(fs.readFileSync('src/lib/layouts.js', 'utf8'))
+  const store = codeOf(fs.readFileSync('src/lib/store.js', 'utf8'))
+  const panel = codeOf(fs.readFileSync('src/ui/LeftPanel.jsx', 'utf8'))
+
+  ok('a saved layout is a document, not a third shape',
+    /doc,/.test(lib) && /Array\.isArray\(l\.doc\.items\)/.test(lib),
+    'saved layouts invented their own format')
+  // ONE LIST, NOT TWO. They answer the same question, so they share one
+  // dropdown under one heading rather than the panel being cut in half. A
+  // saved layout that only appears under its own caption is a second feature
+  // to find; in the list it is just another layout.
+  ok('saved layouts are in the preset dropdown itself',
+    !/function SavedLayouts/.test(panel)
+    && /\.\.\.layouts\.map\(\(l\) => \(\{ value: l\.id, label: l\.name \}\)\)/.test(panel)
+    && /\.\.\.mine\.map\(\(p\) => \(\{ value: p\.key, label: p\.label \}\)\)/.test(panel),
+    'the saved layouts are a separate block again')
+  // A caption inside the list, only where both kinds are present: a heading
+  // over the only rows there are says nothing.
+  ok('with a caption between them when there are both',
+    /hasBuiltIns && layouts\.length/.test(panel) && /label: '— saved —'/.test(panel))
+
+  // THE SNAPSHOT HAS TO CHANGE WHEN THE LIST DOES. LAYOUTS is mutated in
+  // place, so its identity never changes; useSyncExternalStore compares with
+  // Object.is and would be told nothing happened after every save, delete and
+  // import. Saving only appeared to work because the panel set other state in
+  // the same tick — an import, which sets none, left the dropdown stale.
+  ok('the panel watches a version, not the array it mutates',
+    /useSyncExternalStore\(subscribeLayouts, layoutsVersion, layoutsVersion\)/.test(panel)
+    && !/useSyncExternalStore\(subscribeLayouts, \(\) => LAYOUTS/.test(panel),
+    'the list can change without the dropdown noticing')
+
+  // WHAT THE MERGE HAD TO SOLVE. Layout presets was hidden entirely for a
+  // product with no built-ins — tiles and Fly — and putting saved layouts
+  // inside it would have taken somebody's own work off the screen with a list
+  // that merely happened to be empty. So the PANEL is always rendered and the
+  // built-in half hides itself instead.
+  ok('the panel is no longer hidden by product',
+    !/PRESET_PRODUCTS\.includes\(brush\.type\) && <PresetPanel/.test(panel),
+    'saved layouts disappear on a product with no presets')
+  ok('and the built-in half hides itself instead',
+    /const hasBuiltIns = mine\.length > 0/.test(panel) && /\{hasBuiltIns && \(/.test(panel))
+  // Filtered by product is right for a preset, which places ONE product, and
+  // wrong for a saved layout, which is a whole ceiling and may hold four.
+  ok('the built-in list is filtered by product and the saved one is not',
+    /PRESETS\.filter\(\(p\) => \(p\.type \?\? 'baffles'\) === product\)/.test(panel)
+    && !/layouts\.filter\([^)]*type/.test(panel))
+
+  // ONE DEFINITION of what a saved item means. fromJSON opens a document into
+  // the room it names; applyLayout drops one into the room you are in. Two
+  // copies of that loop would drift on reconciliation, rescaling or what to do
+  // with an item the ceiling cannot hold.
+  ok('opening a document and applying a layout share one loop',
+    /export function itemsFromDoc/.test(store)
+    && (store.match(/itemsFromDoc\(/g) ?? []).length >= 3,
+    'applyLayout builds its items its own way')
+  ok('and one rule for a group that lost its members',
+    /export function keepGroups/.test(store)
+    && (store.match(/keepGroups\(/g) ?? []).length >= 3)
+
+  // --- with a standing-in localStorage -------------------------------------
+  const had = typeof globalThis.localStorage !== 'undefined'
+  ok('with no storage, the list is simply empty', !had && loadLayouts() === 0)
+  ok('and saving says so rather than throwing',
+    saveLayout('x', { items: [{ id: 'a' }] }) === null)
+
+  const bag = new Map()
+  globalThis.localStorage = {
+    getItem: (k) => (bag.has(k) ? bag.get(k) : null),
+    setItem: (k, v) => bag.set(k, String(v)),
+    removeItem: (k) => bag.delete(k),
+  }
+
+  loadLayouts()
+  const doc = (n) => ({ version: SCHEMA_VERSION, sceneId: 'sc:edu-class',
+    ceiling: { pitch: 0.001, width: 9, length: 7 },
+    items: Array.from({ length: n }, (_, i) => ({ id: `i${i}`, type: 'baffles', cell: [i * 100, 0], params: {} })) })
+
+  ok('an empty ceiling is not worth saving', saveLayout('Nothing', { items: [] }) === null)
+  const one = saveLayout('Studio A', doc(3))
+  ok('a ceiling is saved', !!one && LAYOUTS.length === 1, String(LAYOUTS.length))
+  ok('under the name given', one?.name === 'Studio A', one?.name)
+  ok('with the zone it was laid out in', JSON.stringify(zoneOf(one)) === '{"w":9,"l":7}',
+    JSON.stringify(zoneOf(one)))
+
+  // A NAME THAT IS TAKEN IS NOT AN OVERWRITE. Silently replacing a saved
+  // ceiling because the names matched is loss nobody notices until later.
+  const two = saveLayout('Studio A', doc(2))
+  ok('a second under the same name is renamed', two?.name === 'Studio A (2)', two?.name)
+  ok('and both are kept', LAYOUTS.length === 2)
+
+  // The suffix is bookkeeping, not part of the name: numbering "Studio A (2)"
+  // as a base of its own compounds to "Studio A (2) (2)" and worse on every
+  // repeat.
+  const three = saveLayout('Studio A (2)', doc(1))
+  ok('an existing suffix is not compounded', three?.name === 'Studio A (3)', three?.name)
+
+  ok('renaming works', renameLayout(one.id, 'Boardroom')
+    && LAYOUTS.find((l) => l.id === one.id).name === 'Boardroom')
+  // NOT a fixed expected string: the suffix is stripped before numbering, so
+  // renaming to "Studio A (2)" asks for the base "Studio A" — which is free
+  // here, because the layout that held it is the one being renamed. What has
+  // to be true is the property, not a particular spelling of it.
+  ok('and cannot take a name another layout has', (() => {
+    renameLayout(one.id, 'Studio A (2)')
+    const mine = LAYOUTS.find((l) => l.id === one.id).name
+    const others = LAYOUTS.filter((l) => l.id !== one.id).map((l) => l.name)
+    return !!mine && !others.includes(mine)
+  })(), LAYOUTS.map((l) => l.name).join(', '))
+
+  // --- export and import ---------------------------------------------------
+  const text = exportLayouts()
+  ok('the export names its format', JSON.parse(text).format === 'univ-layouts-1')
+  ok('and carries them all', JSON.parse(text).layouts.length === 3)
+
+  // MERGE, NOT REPLACE. Importing is how a second machine catches up;
+  // replacing would delete whatever that machine had of its own.
+  const before = LAYOUTS.length
+  const res = importLayouts(text)
+  ok('importing adds rather than replacing', res.added === 3 && LAYOUTS.length === before + 3,
+    `${res.added} added, ${LAYOUTS.length} total`)
+  ok('every name is still unique',
+    new Set(LAYOUTS.map((l) => l.name)).size === LAYOUTS.length,
+    LAYOUTS.map((l) => l.name).join(', '))
+  ok('and no suffix compounded',
+    !LAYOUTS.some((l) => /\(\d+\) \(\d+\)/.test(l.name)),
+    LAYOUTS.map((l) => l.name).join(', '))
+
+  ok('rubbish is refused rather than swallowed', (() => {
+    try { importLayouts('not json'); return false } catch { return true }
+  })())
+  ok('and so is a file that is not layouts', (() => {
+    try { importLayouts('{"hello":1}'); return false } catch { return true }
+  })())
+
+  ok('deleting removes one', deleteLayout(one.id) && LAYOUTS.length === before + 2)
+  ok('and deleting what is not there says so', deleteLayout('nope') === false)
+
+  // --- and it survives a reload --------------------------------------------
+  const kept = LAYOUTS.length
+  LAYOUTS.length = 0
+  ok('a reload finds them again', loadLayouts() === kept, `${LAYOUTS.length} of ${kept}`)
+
+  ok('and the version moves on every change', (() => {
+    const before = layoutsVersion()
+    const l = saveLayout('Version probe', { items: [{ id: 'v' }] })
+    const mid = layoutsVersion()
+    deleteLayout(l.id)
+    return mid > before && layoutsVersion() > mid
+  })(), String(layoutsVersion()))
+
+  delete globalThis.localStorage
 }
 
 // ---------------------------------------------------------------------------

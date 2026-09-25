@@ -59,6 +59,7 @@ run with the manifest moved aside does not reach its tally line.
 src/lib/       domain — no React, no three.js in the document path
   grid.js        integer cell maths: footprints, snapping, overlap, clamping
   presets.js     one-click layouts, as pure functions of the grid
+  layouts.js     layouts you saved yourself: documents, in this browser
   modelFins.js   splits an imported file into fins + hardware, rebuilds the run
   catalog.js     config-data.xlsx: types, sizes, colours, schedule expansion
   scenarios.js   declarative data for the procedural rooms (imports nothing)
@@ -312,6 +313,40 @@ Filenames with spaces and brackets are fine; the path is URL-encoded.
   overlapping or off-grid layout. A preset replaces the layout and adopts its
   product as the brush; Ctrl+Z restores what was there.
 
+- **Saved layouts** — in the Layout presets dropdown itself: save the ceiling
+  you have built and put it back later.
+  A built-in preset is CODE, a `product()` recipe and an `arrange()` that
+  computes positions from whatever grid it is handed, which is what lets one
+  work in a boardroom and a sports hall. Nobody can type a function into a
+  panel, so a saved layout is the other kind of thing: a SNAPSHOT of a ceiling
+  that existed, stored as the very document `toJSON` writes — the same
+  versioned shape the Save button downloads. The price of a snapshot is that it
+  cannot adapt to a room it was not laid out in: applying one keeps the ceiling
+  you are in, drops what will not fit and says how many, and the panel warns
+  beforehand when the saved zone was larger. It replaces the layout like any
+  preset, but ASKS first when there is something to lose, because a list you can
+  add to is a list you can mis-click. Kept in this browser (`lib/layouts.js`),
+  with Export and Import to move them between machines — a name that is taken
+  is never overwritten, it is numbered.
+
+  **One list, not two.** They answer the same question — what should be on
+  this ceiling — so they share one dropdown under one heading, with a disabled
+  `— saved —` row between them when both are present. A saved layout that only
+  appeared under its own caption would be a second feature to find; in the
+  list it is just another layout.
+
+  They differ in exactly one way, and it is not a reason to separate them: the
+  built-in rows are FILTERED to the product on the brush, because each preset
+  places one product, while a saved layout is a whole ceiling and may hold four
+  at once. The control may show only a row still in its own list, so a preset
+  key stops being displayed when the product changes and a saved layout — which
+  belongs to no product — survives it.
+
+  **The panel is no longer hidden by product.** It used to disappear entirely
+  on tiles and Fly, which would have taken your own saved work off the screen
+  with it, so the BUILT-IN ROWS hide instead — and which products have presets
+  is derived from the presets rather than listed in a constant.
+
   **With an imported model selected, presets arrange the model instead.** A
   preset is two separable halves: the catalogue recipe it would place, and the
   arrangement — where things go. Only the arrangement is used when a model is on
@@ -338,6 +373,15 @@ Filenames with spaces and brackets are fine; the path is URL-encoded.
   computed from the camera's live fov and aspect so the whole ceiling is in
   frame — a fixed multiple of the room's larger side crops it, because the
   viewport's aspect decides which side actually binds.
+- **Measure** — a toggle in the top bar, **on by default**. With a set
+  selected, the clear distance to every neighbour within `MEASURE_RANGE_M`
+  (3 m) is drawn on the ceiling plane, square gaps in amber and corner-to-corner
+  ones in grey. It starts on because the question it answers — how far apart are
+  these — is the one being asked while a layout is set out, and a measurement
+  you have to switch on is one you do not take; the button is there to get them
+  out of the way. Preview overrules it either way, and the button goes dead and
+  says so rather than looking live and doing nothing. A view flag like Grid and
+  Room: not in the document, the share link or the session.
 - **Spin** — a turntable toggle in the top bar. Orbits the camera horizontally
   around the current target, holding its height and distance, at roughly one
   revolution per 44 s. Picking a view preset takes precedence and the spin

@@ -37,6 +37,7 @@ import {
   flyMissingFields, flyCells, emptyFlyParams, reconcileFly, flyExtent,
 } from './fly.js'
 import { buildPreset, getPreset } from './presets.js'
+import { getLayout, saveLayout as storeLayout } from './layouts.js'
 import { applyTheme, SELECT_COLOUR, THEMES } from './theme.js'
 
 // ---------------------------------------------------------------------------
@@ -347,6 +348,17 @@ export const useStore = create((set, get) => ({
    */
   marquee: false,
   showGrid: true,
+  // Distances from the selected set to its neighbours within MEASURE_RANGE_M.
+  //
+  // ON by default, because the question it answers — how far apart are these —
+  // is the one being asked while a layout is being set out, and a measurement
+  // you have to go and switch on is one you do not take. Off is for the moment
+  // you want to LOOK at the ceiling rather than set it out, which is also why
+  // preview suppresses it whatever this says.
+  //
+  // A view flag like the rest of this block: not in the document, not in a
+  // share link, not in the session. What is ordered does not change.
+  showMeasures: true,
   // Preview: placed sets stop taking clicks, so a drag on one orbits the camera
   // instead of dragging the baffle. Nothing else changes — the panels, the
   // grid, the tools and the presets all keep working. It is a lock on picking,
@@ -1558,6 +1570,62 @@ export const useStore = create((set, get) => ({
   },
 
   /**
+   * Save the ceiling as it stands, under a name.
+   *
+   * The document itself is what is stored — see lib/layouts.js. Refuses an
+   * empty ceiling: a saved layout of nothing is a row in a list that does
+   * nothing when picked.
+   */
+  saveLayout(name) {
+    if (!get().items.length) return null
+    return storeLayout(name, get().toJSON())
+  },
+
+  /**
+   * Put a saved layout on THIS ceiling.
+   *
+   * The room is not changed. A saved layout records the room it came from, but
+   * applying it is "put my ceiling here", not "take me back there" — so what
+   * does not fit the ceiling in front of you is dropped and counted, the same
+   * answer an oversized built-in preset gives.
+   *
+   * REPLACES, like every other preset, in one undo step.
+   */
+  applyLayout(layoutId) {
+    const layout = getLayout(layoutId)
+    if (!layout) return { placed: 0, skipped: 0 }
+    const g = get().grid()
+    // Cells are a count, not a distance: a layout saved on a coarser grid has
+    // to be scaled before it means anything here.
+    const was = Number(layout.doc?.ceiling?.pitch) || g.pitch
+    const { items: built, dropped } = itemsFromDoc(layout.doc, g, was / g.pitch)
+
+    // THE MASK BELONGS TO THE CEILING, NOT TO THE LAYOUT. Replacing the sets
+    // leaves the obstructions where they are, so a saved set landing on a
+    // light is refused here exactly as it would be by hand.
+    const blocked = new Set(get().obstructions)
+    const items = []
+    let skipped = dropped
+    for (const it of built) {
+      if (maskBlocks(footprint(it, g), g, blocked)) { skipped++; continue }
+      items.push(it)
+    }
+    const groups = keepGroups(items, layout.doc.groups)
+
+    get().pushUndo()
+    set((st) => ({
+      items,
+      groups,
+      ...sel([]),
+      // adopt what it placed, so placing more by hand continues the look
+      brush: items.length
+        ? { type: items[0].type, params: structuredClone(items[0].params) }
+        : st.brush,
+    }))
+    return { placed: items.length, skipped }
+  },
+
+  /**
    * Repeat the selected set into a rows x columns array.
    *
    * Offsets are in CELLS, not metres: the legacy version took a metre spacing
@@ -1720,50 +1788,8 @@ export const useStore = create((set, get) => ({
     const maskK = maskWas / MASK_M
     const rescale = ([i, j]) => (k === 1 ? [i, j] : [Math.round(i * k), Math.round(j * k)])
 
-    const items = []
-    let dropped = 0
-    for (const raw of doc.items) {
-      // A tile block is not a baffle wearing different words. Reconciling it
-      // against the baffle defaults produced an item with a btype and no wood,
-      // which rendered as a baffle set nobody had asked for.
-      const kind = raw.type ?? 'baffles'
-      const params = kind === 'tiles'
-        ? reconcileTile(raw.params ?? {})
-        : kind === 'fly'
-          ? reconcileFly(raw.params ?? {})
-          : kind === 'clouds'
-            ? reconcileCloud(raw.params ?? {})
-            : reconcile({ ...defaultBaffleParams(), ...(raw.params ?? {}) })
-      const item = {
-        id: raw.id || uid(),
-        type: raw.type ?? 'baffles',
-        cell: rescale(raw.cell ?? [0, 0]),
-        rot: raw.rot ?? 0,
-        // Absent in every file written before groups existed, which is what
-        // `?? null` is for: an old layout loads as a ceiling of ungrouped
-        // items rather than failing to load at all.
-        groupId: raw.groupId ?? null,
-        // The item's rotation is the one that placed it, so params follows it
-        // rather than the other way about. Files written before the two were
-        // kept in step can carry a set turned to 90 whose params still say 0.
-        params: { ...params, rot: raw.rot ?? 0 },
-        ...productCells({ type: raw.type ?? 'baffles', params }, g.pitch),
-      }
-      // A file laid out on a different room can carry cells this ceiling does
-      // not have. Drop those rather than silently clamping them into a pile.
-      if (!onGrid(footprint(item, g), g)) { dropped++; continue }
-      items.push(item)
-    }
-    // A group is kept only where at least two of its members made it onto this
-    // ceiling — items can be dropped for being off-grid, and a group that lost
-    // all but one of them is a name attached to nothing. Members of a group
-    // that did not survive are set free rather than left pointing at it.
-    const named = Array.isArray(doc.groups) ? doc.groups : []
-    const groups = named
-      .filter((gr) => gr?.id && membersOf(items, gr.id).length >= 2)
-      .map(({ id, name }) => ({ id, name: name || 'Group' }))
-    const live = new Set(groups.map((gr) => gr.id))
-    for (const it of items) if (it.groupId && !live.has(it.groupId)) it.groupId = null
+    const { items, dropped } = itemsFromDoc(doc, g, k)
+    const groups = keepGroups(items, doc.groups)
 
     get().pushUndo()
     set({
@@ -1779,6 +1805,80 @@ export const useStore = create((set, get) => ({
     return { loaded: items.length, dropped }
   },
 }))
+
+/**
+ * Turn a saved document's items into items for THIS grid.
+ *
+ * Shared by fromJSON, which opens a document into the room it names, and by
+ * applyLayout, which drops a saved layout into the room you are already in.
+ * One definition because the two must not disagree about what a saved item
+ * means: the same reconciliation per product, the same rescale when the pitch
+ * has moved, the same footprint maths, and the same answer to an item the
+ * ceiling cannot hold.
+ *
+ * `k` is the ratio between the pitch the document was written at and this
+ * grid's. Cells are a count, not a distance — a layout saved at 100 mm cells
+ * and read at 1 mm lands in the corner without it.
+ */
+/**
+ * The groups worth keeping, and the members set free.
+ *
+ * A group is kept only where at least two of its members made it onto this
+ * ceiling — items can be dropped for being off-grid or blocked, and a group
+ * that lost all but one of them is a name attached to nothing. MUTATES the
+ * items it is given, clearing a groupId that now points at nothing.
+ *
+ * Shared by fromJSON and applyLayout for the same reason itemsFromDoc is: two
+ * copies of this rule would eventually disagree about what a half-placed group
+ * means.
+ */
+export function keepGroups(items, named) {
+  const groups = (Array.isArray(named) ? named : [])
+    .filter((gr) => gr?.id && membersOf(items, gr.id).length >= 2)
+    .map(({ id, name }) => ({ id, name: name || 'Group' }))
+  const live = new Set(groups.map((gr) => gr.id))
+  for (const it of items) if (it.groupId && !live.has(it.groupId)) it.groupId = null
+  return groups
+}
+
+export function itemsFromDoc(doc, g, k = 1) {
+  const rescale = ([i, j]) => (k === 1 ? [i, j] : [Math.round(i * k), Math.round(j * k)])
+  const items = []
+  let dropped = 0
+  for (const raw of doc.items ?? []) {
+    // A tile block is not a baffle wearing different words. Reconciling it
+    // against the baffle defaults produced an item with a btype and no wood,
+    // which rendered as a baffle set nobody had asked for.
+    const kind = raw.type ?? 'baffles'
+    const params = kind === 'tiles'
+      ? reconcileTile(raw.params ?? {})
+      : kind === 'fly'
+        ? reconcileFly(raw.params ?? {})
+        : kind === 'clouds'
+          ? reconcileCloud(raw.params ?? {})
+          : reconcile({ ...defaultBaffleParams(), ...(raw.params ?? {}) })
+    const item = {
+      id: raw.id || uid(),
+      type: raw.type ?? 'baffles',
+      cell: rescale(raw.cell ?? [0, 0]),
+      rot: raw.rot ?? 0,
+      // Absent in every file written before groups existed, which is what
+      // `?? null` is for: an old layout loads as a ceiling of ungrouped
+      // items rather than failing to load at all.
+      groupId: raw.groupId ?? null,
+      // The item's rotation is the one that placed it, so params follows it
+      // rather than the other way about. Files written before the two were
+      // kept in step can carry a set turned to 90 whose params still say 0.
+      params: { ...params, rot: raw.rot ?? 0 },
+      ...productCells({ type: raw.type ?? 'baffles', params }, g.pitch),
+    }
+    // A file laid out on a different room can carry cells this ceiling does
+    // not have. Drop those rather than silently clamping them into a pile.
+    if (!onGrid(footprint(item, g), g)) { dropped++; continue }
+    items.push(item)
+  }
+  return { items, dropped }
+}
 
 // ---------------------------------------------------------------------------
 // parameter reconciliation
